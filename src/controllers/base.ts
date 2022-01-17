@@ -18,11 +18,18 @@ export abstract class BaseController<T extends BaseResource> {
     data?: any
   ): Promise<R> {
     const url = `${this._config.url}/${endpoint}`;
+    let headers = {}
+    if (this._config.kongAdminToken) {
+      headers = {
+        "kong-admin-token": this._config.kongAdminToken
+      }
+    }
     try {
       const response = await axios({
         method,
         url,
-        data
+        data,
+        headers
       });
 
       if (response.data?.data) {
